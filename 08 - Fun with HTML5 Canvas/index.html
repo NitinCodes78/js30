@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+</script>
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+<script>
+    var canvas=document.getElementById("draw");
+    var ctx=canvas.getContext("2d");
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+    
+    ctx.lineCap="round";   //corner of the line
+    ctx.lineWidth=20; //Width starts from 10 upto 100 and then direction is reversed
+    ctx.lineJoin="round";   //Shape when two lines join
+
+    let lastX=0;
+    let lastY=0;
+    let direction=false;  //To control the width of the line
+    let isDrawing=false; //Variable that tell whether the mouse is pressed down
+    var hue=0;   //color of the line
+
+    function draw(e){             //function runs in a loop till the mouse is down
+      if(!isDrawing) return;
+      ctx.beginPath();
+      ctx.strokeStyle=`hsl(${hue},100%,50%)`; //use it inside function to update hue else it takes hue 
+      ctx.moveTo(lastX,lastY);
+      ctx.lineTo(e.offsetX,e.offsetY);
+      ctx.stroke();
+      [lastX,lastY]=[e.offsetX,e.offsetY];  //starting position keeps on updating
+      hue=hue+10;
+      if(hue>=360)
+         hue=0;
+      if(ctx.lineWidth>=100 || ctx.lineWidth<=10)
+        direction=!direction;
+      if(direction)
+        ctx.lineWidth-=1;
+      else
+        ctx.lineWidth+=1;
+    }
+     
+    //Now we have to add EventListener for when mouse is pressed down and is moving 
+
+    canvas.addEventListener("mousedown", (e)=> { //first use "mousedown" before "mousemove", to update the starting coordinates 
+      isDrawing=true;
+      [lastX,lastY]=[e.offsetX,e.offsetY];
+    });
+    canvas.addEventListener("mousemove",draw);
+    canvas.addEventListener("mouseout", ()=> isDrawing=false);
+    canvas.addEventListener("mouseup", () => isDrawing=false);
+    ctx.stroke();
+</script>
+</body>
+</html>
