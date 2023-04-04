@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+<script>
+  //performs when a certain sequence of character is pressed
+  const pressed=[];
+  const secretCode="nitin";
+  window.addEventListener("keyup", (e)=>{
+     pressed.push(e.key);
+     //We'll keep the no. of elements in pressed just equal to the length of secretCode and compare it with our secret code (elements entered latest are to be kept that is at last)
+     pressed.splice(0,pressed.length-secretCode.length);
+     const code=pressed.join("");
+     if(code.includes(secretCode)){
+      console.log("ding ding");
+     }
+  })
+</script>
+</body>
+</html>
