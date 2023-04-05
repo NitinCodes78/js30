@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+  <script>
+    // start with strings, numbers and booleans
+    let vari1=5;
+    let vari2=vari1;
+    vari2=7;
+    console.log(vari1,vari2);
+    // Let's say we have an array
+    //Arrays basically work by reference
+    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    const team=players;
+    team[3]='lux';  //We basically changed it's reference
+    console.log(players, team);
+    // now here is the problem!,we have edited the original array too! Why? It's because that is an array reference, not an array copy. They both point to the same array! So, how do we fix this? We take a copy instead!
+    const team2=players.slice();
+    team2[3]='nitin';
+    console.log(team2, players);
+    // or create a new array and concat the old one in
+    const team3=[].concat(players);
+    // or use the new ES6 Spread
+    const team4=[...players];
+    const team5=Array.from(players);
+    console.log(team5);
+    // now when we update it, the original one isn't changed
+
+
+    /************************************************************************************************/
+    // The same thing goes for objects as in arrays, let's say we have a person object
+    // with Objects
+    const person = {
+      name: 'Wes Bos',
+      age: 80
+    };
+    const captain=person;
+    captain.age=99;
+    console.log(person); //changes the age of person also
+
+    // and think we make a copy using spread operator and assign
+    const obj2=Object.assign({}, person,{number:9, age:21});
+    console.log(obj2);
+    const obj3={...person};
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    console.clear();
+    const nitin={
+      age:21,
+      name:'nitin',
+      social:{
+         insta:'nitingoyal',
+         twitter:'mouse'
+      },
+    };
+    console.log(nitin);
+    const goyal=Object.assign({},nitin);
+    goyal.social.insta='meowww'; //It will also change in nitin because nested object is still passed a reference in the copy
+    goyal.age=99; //It will remain same in nitin
+    console.log(nitin);
+  </script>
+</body>
+</html>
