@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+  <div class="hero">
+    <h1 contenteditable>🔥WOAH!</h1>
+  </div>
+  <style>
+  html{
+    color: black;
+    font-family: sans-serif;
+  }
+  body{
+    margin: 0;
+  }
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }
+  h1 {
+    text-shadow: 120px 120px 0 red;
+    font-size: 100px;
+  }
+  </style>
+<script>
+  const hero=document.querySelector('.hero');
+  const text=document.querySelector('.hero h1');
+  const walk=300;
+  function shadow(e){
+      // const width=hero.offsetWidth;
+      // const height=hero.offsetHeight;
+      const {offsetHeight:height, offsetWidth:width}=hero;
+      let {offsetX:x, offsetY:y}=e;
+      //e.offsetX/e.offsetY gives the offset of the element, but when we go to any of it's child then it gives offset of the child, similarily e.target also gives of it's child when hovered upon the child
+      //So have condition if we are hovering over the element or it's child
+      if(this!==e.target){//this gives hero(event listener on that)
+          x=x+text.offsetTop;
+          x=x+text.offsetLeft;
+      }
+      //Now take the values between -(walk/2) and +(walk/2) to add shadow accordingly
+      const xWalk=Math.round((x/width*walk)-(walk/2));
+      const yWalk=Math.round((y/height*walk)-(walk/2));
+      text.style.textShadow= `${xWalk}px ${yWalk}px green,
+                              ${xWalk*-1}px ${yWalk}px red,
+                              ${yWalk}px ${xWalk*-1}px pink,
+                              ${yWalk*-1}px ${xWalk}px blue`;
+  }
+  hero.addEventListener("mousemove",shadow);
+</script>
+</body>
+</html>
