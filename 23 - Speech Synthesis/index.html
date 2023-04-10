@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Synthesis</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+    <div class="voiceinator">
+      <h1>The Voiceinator 5000</h1>
+      <select name="voice" id="voices">
+        <option value="">Select A Voice</option>
+      </select>
+      <label for="rate">Rate:</label>
+      <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
+      <label for="pitch">Pitch:</label>
+      <input name="pitch" type="range" min="0" max="2" step="0.1">
+      <textarea name="text">Hello! I love JavaScript 👍</textarea>
+      <button id="stop">Stop!</button>
+      <button id="speak">Speak</button>
+    </div>
+<script>
+  const voicesDropdown = document.querySelector('[name="voice"]');
+  const options = document.querySelectorAll('[type="range"], [name="text"]');
+  const speakButton = document.querySelector('#speak');
+  const stopButton = document.querySelector('#stop');
+
+
+  const msg = new SpeechSynthesisUtterance(); //It contains the attributes: text, rate, pitch, lang and voice etc
+  // console.log(msg);
+  let voices = [];
+  msg.text=document.querySelector('[name="text"]').value;
+  //msg.voice is still null but we have assigned it the text, so speechSynthesis.speak(msg) will take the default voice
+  //speechSynthesis is a global variable that will help our device to speak
+
+  /**********************************Taking different Voices**********************************/
+
+  function populateVoices(){
+     voices=this.getVoices(); //voices array declared above
+    //  console.log(voices);
+     voicesDropdown.innerHTML= voices
+      .filter(voice => voice.lang.includes('en')) //for only english languages
+      .map(voice=>`<option value="${voice.name}">${voice.name} ${voice.lang}</option>`)
+        .join("");
+  }
+  speechSynthesis.addEventListener("voiceschanged",populateVoices); //We have to add this event listener to take different voices, it will be fired by default always when our page has loaded, and different browser contains different voices
+
+  /************************Assiging the value of dropDown to msg.voice****************************************/
+
+  function changeVoice(){
+     console.log(voices); //you'll see each voice contain many attributes other then name, each voice contains these values in an object and msg.value accepts only this object
+     console.log(typeof(voices[0])); //Object
+     msg.voice=voices.find(x=> x.name===this.value);
+     //Now suppose while our device is speaking, we change the language, now, we want it to stop at that moment and speak in the new language;
+     toggle(false); //optional argument
+  }
+  function toggle(startOver=true){ //optional parameter
+     speechSynthesis.cancel();
+     if(startOver){  
+     speechSynthesis.speak(msg);
+     }
+  }
+  voicesDropdown.addEventListener("change", changeVoice);
+  options.forEach(option=>
+    option.addEventListener("change",function(){
+        msg[this.name]=this.value;
+        toggle(true);
+    })
+  )
+
+  speakButton.addEventListener('click',toggle);
+  //toggle(false) passed directly won't work as it won't accept the argument
+  stopButton.addEventListener('click', ()=>toggle(false));
+</script>
+</body>
+</html>
